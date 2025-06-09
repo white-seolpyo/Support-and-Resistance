@@ -51,50 +51,96 @@ for code, name in stock_info:
     for i in data:
         L, H = (i['저가'], i['고가'])
 
-        a = 0
-        b = 0
-        c = 0
-        d = 0
-        e = 0
-        f = 0
-        g = 0
-        h = 0
+        a = 2
+        b = 2
+        c = 2
+        d = 2
+        e = 2
+        f = 2
+        g = 2
+        h = 2
 
-        for p in (L, H):
-            if hh < p:
-                a += 1
-            if hm < p:
-                b += 1
-            if hl < p:
-                c += 1
-            if close < p:
-                d += 1
-            if lh < p:
-                e += 1
-            if lm < p:
-                f += 1
-            if lh < p:
-                g += 1
-            if L <= H:
-                h += 1
+        if H <= hh:
+            a = 0
+        if H <= hm:
+            b = 0
+        if H <= hl:
+            c = 0
+        if H <= close:
+            d = 0
+        if H <= lh:
+            e = 0
+        if H <= lm:
+            f = 0
+        if H <= ll:
+            g = 0
+
+        if not a and b:
+            b = 1
+        elif not b and c:
+            c = 1
+        elif not c and d:
+            d = 1
+        elif not d and e:
+            e = 1
+        elif not e and f:
+            f = 1
+        elif not f and g:
+            g = 1
+        elif not g and h:
+            h = 1
+
+        if ll < L:
+            h = 0
+        if lm < L:
+            g = 0
+        if lh < L:
+            f = 0
+        if close < L:
+            e = 0
+        if hl < L:
+            d = 0
+        if hm < L:
+            c = 0
+        if hh < L:
+            b = 0
+
+        if not h and g:
+            g = 1
+        elif not g and f:
+            f = 1
+        elif not f and e:
+            e = 1
+        elif not e and d:
+            d = 1
+        elif not d and c:
+            c = 1
+        elif not c and b:
+            b = 1
+        elif not b and a:
+            a = 1
+
+        if not any([a, b, c, d, e, f, g, h]):
+            print(f'{[a, b, c, d, e, f, g, h]=}')
+            raise
 
         v = i['거래량'] / (a+b+c+d+e+f+g+h)
 
-        if a:
+        if 0 < a:
             hh_list.append(v * a)
-        if b:
+        if 0 < b:
             hm_list.append(v * b)
-        if c:
+        if 0 < c:
             hl_list.append(v * c)
-        if d:
+        if 0 < d:
             ch_list.append(v * d)
-        if e:
+        if 0 < e:
             cl_list.append(v * e)
-        if f:
+        if 0 < f:
             lh_list.append(v * f)
-        if g:
+        if 0 < g:
             lm_list.append(v * g)
-        if h:
+        if 0 < h:
             ll_list.append(v * h)
 
     for n, l in {
