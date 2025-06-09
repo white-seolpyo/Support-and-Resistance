@@ -38,6 +38,7 @@ for code, name in stock_info:
     print(f'종목명 : {name}')
     print(f'시가 : {Open:,}원, 고가 : {high:,}원, 저가 : {low:,}원, 종가 : {close:,}원')
     print(f'전체 거래량 : {volume:,}주')
+    print('\n거래량 분포')
 
     hh_list = []
     hm_list = []
@@ -48,26 +49,53 @@ for code, name in stock_info:
     lm_list = []
     ll_list = []
     for i in data:
-        lh = (i['저가'] + i['고가']) / 2
-        oc = (i['시가'] + i['종가']) / 2
-        p = (lh + oc) / 2
+        L, H = (i['저가'], i['고가'])
 
-        if hh <= p:
-            hh_list.append(i['거래량'])
-        elif hm <= p:
-            hm_list.append(i['거래량'])
-        elif hl <= p:
-            hl_list.append(i['거래량'])
-        elif close <= p:
-            ch_list.append(i['거래량'])
-        elif lh <= p:
-            cl_list.append(i['거래량'])
-        elif lm <= p:
-            lh_list.append(i['거래량'])
-        elif ll <= p:
-            lm_list.append(i['거래량'])
-        else:
-            ll_list.append(i['거래량'])
+        a = 0
+        b = 0
+        c = 0
+        d = 0
+        e = 0
+        f = 0
+        g = 0
+        h = 0
+
+        for p in (L, H):
+            if hh < p:
+                a += 1
+            if hm < p:
+                b += 1
+            if hl < p:
+                c += 1
+            if close < p:
+                d += 1
+            if lh < p:
+                e += 1
+            if lm < p:
+                f += 1
+            if lh < p:
+                g += 1
+            if L <= H:
+                h += 1
+
+        v = i['거래량'] / (a+b+c+d+e+f+g+h)
+
+        if a:
+            hh_list.append(v * a)
+        if b:
+            hm_list.append(v * b)
+        if c:
+            hl_list.append(v * c)
+        if d:
+            ch_list.append(v * d)
+        if e:
+            cl_list.append(v * e)
+        if f:
+            lh_list.append(v * f)
+        if g:
+            lm_list.append(v * g)
+        if h:
+            ll_list.append(v * h)
 
     for n, l in {
         '고가 75% ~ 고가 100%': hh_list,
@@ -80,6 +108,6 @@ for code, name in stock_info:
         '저가 100% ~ 저가 75%': ll_list
     }.items():
         print(f'  {n}')
-        s = sum(l)
+        s = sum([round(i) for i in l])
         print(f'    {s:,}주')
         print(f'    {round(s * 100 / volume, 2)}%')
