@@ -51,80 +51,47 @@ for code, name in stock_info:
     for i in data:
         L, H = (i['저가'], i['고가'])
 
-        a = 2
-        b = 2
-        c = 2
-        d = 2
-        e = 2
-        f = 2
-        g = 2
-        h = 2
+        num_list = [0 for _ in range(8)]
 
-        if H <= hh:
-            a = 0
-        if H <= hm:
-            b = 0
-        if H <= hl:
-            c = 0
-        if H <= close:
-            d = 0
-        if H <= lh:
-            e = 0
-        if H <= lm:
-            f = 0
-        if H <= ll:
-            g = 0
+        def get_index(p):
+            if hh < p:
+                return 0
+            elif hm < p:
+                return 1
+            elif hl < p:
+                return 2
+            elif close < p:
+                return 3
+            elif lh < p:
+                return 4
+            elif lm < p:
+                return 5
+            elif ll < p:
+                return 6
+            return 7
 
-        if not a and b:
-            b = 1
-        elif not b and c:
-            c = 1
-        elif not c and d:
-            d = 1
-        elif not d and e:
-            e = 1
-        elif not e and f:
-            f = 1
-        elif not f and g:
-            g = 1
-        elif not g and h:
-            h = 1
+        for p1, p2 in [
+            (i['저가'], i['고가']),
+            (i['시가'], i['종가'])
+        ]:
+            ind1, ind2 = (get_index(p1), get_index(p2))
+            if ind1 == ind2:
+                num_list[ind1] += 2
+            else:
+                num_list[ind1] += 1
+                num_list[ind2] += 1
+                for ind in range(ind2-ind1):
+                    if ind2 <= ind:
+                        break
+                    if ind1 < ind:
+                        num_list[ind] += 2
 
-        if ll < L:
-            h = 0
-        if lm < L:
-            g = 0
-        if lh < L:
-            f = 0
-        if close < L:
-            e = 0
-        if hl < L:
-            d = 0
-        if hm < L:
-            c = 0
-        if hh < L:
-            b = 0
-
-        if not h and g:
-            g = 1
-        elif not g and f:
-            f = 1
-        elif not f and e:
-            e = 1
-        elif not e and d:
-            d = 1
-        elif not d and c:
-            c = 1
-        elif not c and b:
-            b = 1
-        elif not b and a:
-            a = 1
-
-        if not any([a, b, c, d, e, f, g, h]):
-            print(f'{[a, b, c, d, e, f, g, h]=}')
+        if not any(num_list):
+            print(f'{num_list=}')
             raise
 
-        v = i['거래량'] / (a+b+c+d+e+f+g+h)
+        a, b, c, d, e, f, g, h = num_list
+        v = i['거래량'] / sum(num_list)
 
         if 0 < a:
             hh_list.append(v * a)
