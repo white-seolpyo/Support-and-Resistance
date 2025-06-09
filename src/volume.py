@@ -111,3 +111,4 @@ for code, name in stock_info:
         s = sum([round(i) for i in l])
         print(f'    {s:,}주')
         print(f'    {round(s * 100 / volume, 2)}%')
+
